@@ -1,7 +1,7 @@
 # Project Status
 
 **Last updated:** 2026-06-09
-**Current stage:** 1 — System Spec
+**Current stage:** 2a — Component Spec: Document Loader
 **Branch:** claude/ssm-long-document-qa-jgbylw
 
 ---
@@ -13,12 +13,15 @@
   - Statement size: few hundred to ~1000 characters
   - Simple local web frontend added (localhost, no cloud)
   - Plain text only, English only, one-sentence violation explanations
+- [x] Stage 1: `specs/02_system_spec.md` — APPROVED
+  - 5 components: Document Loader, SSM Engine, Compliance Extractor, Output Reporter, Web Frontend
+  - Mamba-130M/370M backbone, FastAPI + vanilla HTML, binary checkpoint on disk
 
 ---
 
 ## In Progress
 
-- [ ] Stage 1: `specs/02_system_spec.md` — awaiting human approval
+- [ ] Stage 2a: `specs/03_components/01_document_loader.md` — awaiting human approval
 
 ---
 
@@ -30,5 +33,5 @@ None.
 
 ## Next Action
 
-Await human approval of `specs/02_system_spec.md`, then begin Stage 2
-(component specs, one per component).
+Await human approval of `specs/03_components/01_document_loader.md`, then
+write next component spec (SSM Engine).
