@@ -1,6 +1,6 @@
 # User Specification — SSM Legal Compliance Checker
 
-**Stage:** 0 | **Status:** Awaiting approval
+**Stage:** 0 | **Status:** APPROVED
 
 ---
 
@@ -78,11 +78,24 @@ A compliance report printed to the terminal and optionally saved to a `.txt` fil
 
 ---
 
+## Web Frontend
+
+A simple browser-based UI served locally (same machine). No cloud hosting. Two views:
+
+| View | Purpose |
+|------|---------|
+| **Ingest** | Upload or specify path to law corpus `.txt`, trigger ingestion, show progress |
+| **Check** | Paste or upload statement `.txt`, run compliance check, display report |
+
+The frontend calls the same backend logic as the CLI. Running the tool starts a local
+web server; the user opens `http://localhost:<port>` in their browser.
+
+---
+
 ## Out of Scope
 
 - Training or fine-tuning models
 - Multi-language support (English only for prototype)
-- GUI or web interface
 - PDF / DOCX parsing (plain text only)
 
 ---
@@ -91,6 +104,7 @@ A compliance report printed to the terminal and optionally saved to a `.txt` fil
 
 Key decisions embedded here:
 - Two-mode design: `ingest` (slow, once) and `check` (fast, per query)
+- Simple local web frontend at `localhost` (no cloud)
 - Plain text input only
 - Hours acceptable for ingestion; seconds expected for check
 - One-sentence violation explanations

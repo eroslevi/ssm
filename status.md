@@ -1,27 +1,24 @@
 # Project Status
 
 **Last updated:** 2026-06-09
-**Current stage:** 0 — User Spec (revised, awaiting approval)
+**Current stage:** 1 — System Spec
 **Branch:** claude/ssm-long-document-qa-jgbylw
 
 ---
 
 ## Completed
 
-- [x] Concept discussion and use case selection
-  - Input stream: [law corpus | company statement] concatenated
-  - Single-pass SSM, very low volatility, no retrieval
-  - Violations detected when statement contradicts accumulated law context
-- [x] Environment setup (CLAUDE.md, directory structure)
-- [x] Stage 0 first draft — revised after review:
-  - Statement size corrected: few hundred to ~1000 characters
-  - Two-mode architecture confirmed: `ingest` (once, hours OK) + `check` (per query, seconds)
+- [x] Stage 0: `specs/01_user_spec.md` — APPROVED
+  - Two-mode design: `ingest` (once, hours OK) + `check` (per query, seconds)
+  - Statement size: few hundred to ~1000 characters
+  - Simple local web frontend added (localhost, no cloud)
+  - Plain text only, English only, one-sentence violation explanations
 
 ---
 
 ## In Progress
 
-- [ ] Stage 0: `specs/01_user_spec.md` revised — awaiting human approval
+- [ ] Stage 1: `specs/02_system_spec.md` — awaiting human approval
 
 ---
 
@@ -33,4 +30,5 @@ None.
 
 ## Next Action
 
-Await human approval of `specs/01_user_spec.md`, then begin Stage 1 (system spec).
+Await human approval of `specs/02_system_spec.md`, then begin Stage 2
+(component specs, one per component).
