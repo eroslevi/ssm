@@ -21,22 +21,34 @@ applicable law.
 
 ---
 
-## Inputs
+## Two-Mode Architecture
 
-| Input | Format | Size expectation |
-|-------|--------|-----------------|
-| Law corpus | Plain text file (`.txt`) | Large — up to hundreds of MB |
-| Company statement | Plain text file (`.txt`) | Small — tens of KB to low MB |
+Because the law corpus is large and does not change between queries, processing is
+split into two modes:
 
-Both inputs are provided as separate files. The tool concatenates them internally
-in the order: laws first, statement second.
+| Mode | Command | When to run |
+|------|---------|-------------|
+| `ingest` | `python -m ssm_legal ingest --laws laws.txt` | Once, when the law corpus is updated |
+| `check` | `python -m ssm_legal check --statement statement.txt` | Every time a statement is evaluated |
+
+`ingest` streams the law corpus through the SSM and saves the final hidden state
+(a "law checkpoint") to disk. `check` restores that checkpoint and processes only
+the statement against it.
 
 ---
 
-## Output
+## Inputs
 
-A compliance report printed to the terminal and optionally saved to a `.txt` file,
-containing:
+| Mode | Input | Format | Size |
+|------|-------|--------|------|
+| `ingest` | Law corpus | Plain text `.txt` | Up to hundreds of MB |
+| `check` | Company statement | Plain text `.txt` | Few hundred to ~1000 characters |
+
+---
+
+## Output (`check` mode)
+
+A compliance report printed to the terminal and optionally saved to a `.txt` file:
 
 1. **Verdict:** COMPLIANT or NON-COMPLIANT
 2. **Violations list:** For each detected violation:
@@ -47,14 +59,22 @@ containing:
 
 ---
 
+## Performance Expectations
+
+| Mode | Expected duration | Notes |
+|------|-------------------|-------|
+| `ingest` | Hours acceptable | Run once per law corpus version |
+| `check` | Seconds | Statement is tiny; checkpoint is pre-computed |
+
+---
+
 ## Constraints
 
 - Runs on Windows 10/11, HP EliteBook class hardware (16 GB RAM, no dedicated GPU assumed)
 - CPU execution required; CUDA acceleration optional if available
 - No cloud calls, no external API dependencies
 - Python 3.10+, installable via `pip` with a standard `requirements.txt`
-- Single-pass processing — no iterative retrieval loops
-- Startup + processing time target: under 5 minutes for a 100 MB law corpus + 50 KB statement on CPU
+- Single streaming pass — no retrieval loops at query time
 
 ---
 
@@ -63,16 +83,14 @@ containing:
 - Training or fine-tuning models
 - Multi-language support (English only for prototype)
 - GUI or web interface
-- Real-time / streaming input
+- PDF / DOCX parsing (plain text only)
 
 ---
 
 ## Does this match your intent?
 
 Key decisions embedded here:
-- Separate input files (not pre-concatenated by the user)
-- Plain text only (no PDF/DOCX parsing)
-- Terminal output, optional file save
-- 5-minute processing budget on CPU
-
-Please confirm or flag any of the above before Stage 1 begins.
+- Two-mode design: `ingest` (slow, once) and `check` (fast, per query)
+- Plain text input only
+- Hours acceptable for ingestion; seconds expected for check
+- One-sentence violation explanations
