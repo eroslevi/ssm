@@ -17,9 +17,9 @@ Two modes: chunked streaming (law corpus) and full load (statement).
 class DocumentLoader:
     def __init__(self, tokenizer_name: str = "EleutherAI/gpt-neox-20b")
 
-    def stream(self, path: str, chunk_tokens: int = 1024) -> Iterator[torch.Tensor]
-    # Yields successive chunks of shape (chunk_tokens,) dtype=torch.long
-    # Final chunk may be shorter
+    def stream(self, path: str) -> Iterator[torch.Tensor]
+    # Yields successive token chunks (internal buffer size, not user-configurable)
+    # Each chunk shape: (n,) dtype=torch.long; final chunk may be shorter
 
     def load(self, path: str) -> torch.Tensor
     # Returns full token sequence, shape (n_tokens,) dtype=torch.long
@@ -34,8 +34,8 @@ class DocumentLoader:
 |----------|--------|--------|
 | Tokenizer | `EleutherAI/gpt-neox-20b` | Matches Mamba pretraining vocabulary |
 | File encoding | UTF-8 | Standard; error on non-UTF-8 input |
-| Chunk size default | 1024 tokens | Balances RAM usage and I/O overhead |
-| RAM ceiling (stream) | At most 2 × chunk_tokens tokens in memory at once | Keeps footprint flat regardless of corpus size |
+| Buffer size | Internal implementation detail | No effect on SSM output; chosen to keep RAM flat |
+| RAM ceiling (stream) | Constant regardless of corpus size | OS-level buffering + fixed internal buffer |
 
 ---
 
