@@ -1,7 +1,7 @@
 # Project Status
 
 **Last updated:** 2026-06-09
-**Current stage:** 2a — Component Spec: Document Loader
+**Current stage:** 2b — Component Spec: SSM Engine
 **Branch:** claude/ssm-long-document-qa-jgbylw
 
 ---
@@ -21,7 +21,8 @@
 
 ## In Progress
 
-- [ ] Stage 2a: `specs/03_components/01_document_loader.md` — awaiting human approval
+- [x] Stage 2a: `specs/03_components/01_document_loader.md` — APPROVED
+- [ ] Stage 2b: `specs/03_components/02_ssm_engine.md` — awaiting human approval
 
 ---
 
@@ -33,5 +34,5 @@ None.
 
 ## Next Action
 
-Await human approval of `specs/03_components/01_document_loader.md`, then
-write next component spec (SSM Engine).
+Await human approval of `specs/03_components/02_ssm_engine.md`, then
+write next component spec (Compliance Extractor).
