@@ -17,7 +17,8 @@ Wrap a pretrained Mamba model running in recurrent inference mode. Two operation
 ```python
 class SSMEngine:
     def __init__(self, model_name: str = "state-spaces/mamba-370m",
-                 device: str = "cpu")
+                 device: str = "cpu",
+                 dtype: torch.dtype = torch.float16)
 
     def ingest(self, token_stream: Iterator[torch.Tensor],
                checkpoint_path: str) -> None
@@ -37,11 +38,13 @@ class SSMEngine:
 
 | Decision | Choice | Reason |
 |----------|--------|--------|
-| Model | `state-spaces/mamba-370m` | Fits in 16 GB RAM on CPU; strong enough for semantic retention |
+| Model | `state-spaces/mamba-370m` | ~750 MB in float16; ~1.5 GB total footprint — well within 10 GB budget |
+| Precision | `torch.float16` default | Halves weight memory; sufficient for inference |
 | Inference mode | Recurrent (step-by-step) | Required for streaming; O(1) memory in hidden state |
 | Volatility | Pretrained Δ values used as-is | No fine-tuning in prototype; Δ is input-dependent and learned |
 | Checkpoint format | `torch.save` dict of conv_state + ssm_state tensors per layer | Native PyTorch, no extra dependencies |
 | Device | CPU default, CUDA if available | On-prem laptop; CUDA accelerates ingest significantly if present |
+| Upgrade path | `mamba-1.4b` in float16 (~3.5 GB total) | If 370m detection quality is insufficient at Stage 3b |
 
 ---
 
