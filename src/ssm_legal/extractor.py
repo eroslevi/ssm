@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -11,10 +12,11 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 if TYPE_CHECKING:
     from ssm_legal.engine import SSMEngine
 
-_PASSAGE_CHARS = 800
-_STRIDE_CHARS = 200
-_TOP_K = 5
+_PASSAGE_CHARS  = 800
+_STRIDE_CHARS   = 200
+_TOP_K          = 5
 _MAX_LAW_TOKENS = 2048
+_MIN_SENT_WORDS = 3   # ignore sentence fragments shorter than this
 
 
 @dataclass
@@ -56,19 +58,18 @@ class ComplianceExtractor:
 
     def extract(self, statement: str) -> list[Violation]:
         """Retrieve relevant law passages, run Mamba over [law_context | statement], return violations."""
-        # 1. Retrieve top-k law passages by TF-IDF similarity to statement
+        # 1. Retrieve top-k law passages by TF-IDF similarity to full statement
         stmt_vec = self.vectorizer.transform([statement])
         scores = (self.tfidf_matrix @ stmt_vec.T).toarray().flatten()
         top_idx = scores.argsort()[-_TOP_K:][::-1]
         law_passages = [self.passages[i] for i in top_idx]
 
-        # 2. Tokenize separately so statement_start is exact
+        # 2. Tokenize law passages and statement separately so statement_start is exact
         law_token_ids: list[int] = []
         for p in law_passages:
             ids = self.tokenizer.encode(p, add_special_tokens=False)
             if len(law_token_ids) + len(ids) > _MAX_LAW_TOKENS:
-                remaining = _MAX_LAW_TOKENS - len(law_token_ids)
-                law_token_ids.extend(ids[:remaining])
+                law_token_ids.extend(ids[: _MAX_LAW_TOKENS - len(law_token_ids)])
                 break
             law_token_ids.extend(ids)
 
@@ -76,49 +77,55 @@ class ComplianceExtractor:
         statement_start = len(law_token_ids)
         combined = torch.tensor(law_token_ids + stmt_token_ids, dtype=torch.long)
 
-        # 3. Single forward pass through SSM
-        log_probs = self.engine.forward(combined)  # (n_combined, vocab_size)
+        # 3. Single parallel forward pass through SSM
+        log_probs = self.engine.forward(combined)          # (n_combined, vocab_size)
 
         # 4. Cross-entropy for statement tokens only
         n_stmt = len(stmt_token_ids)
         stmt_log_probs = log_probs[statement_start : statement_start + n_stmt]
-        ce = -stmt_log_probs[range(n_stmt), stmt_token_ids]
+        ce = -stmt_log_probs[range(n_stmt), stmt_token_ids]   # (n_stmt,)
 
-        # 5. Flag tokens above mean + k·std
         if n_stmt < 2 or ce.std() < 1e-6:
             return []
-        threshold = ce.mean() + self.threshold_std * ce.std()
-        flagged = (ce > threshold).nonzero(as_tuple=True)[0].tolist()
+        ce_mean = ce.mean().item()
+        ce_std  = ce.std().item()
+        threshold = ce_mean + self.threshold_std * ce_std
 
-        # 6. Merge adjacent flagged tokens into spans, build Violation objects
+        # 5. Sentence-level aggregation — average CE per sentence, flag whole sentences
         violations: list[Violation] = []
-        for span_start, span_end in _merge_spans(flagged):
-            excerpt = self.tokenizer.decode(stmt_token_ids[span_start : span_end + 1]).strip()
-            if not excerpt:
+        token_pos = 0
+
+        for sentence in _split_sentences(statement):
+            sent_ids = self.tokenizer.encode(sentence, add_special_tokens=False)
+            n_sent = len(sent_ids)
+            if n_sent == 0:
                 continue
-            span_vec = self.vectorizer.transform([excerpt])
-            span_scores = (self.tfidf_matrix @ span_vec.T).toarray().flatten()
-            best = self.passages[span_scores.argmax()]
+
+            sent_ce = ce[token_pos : token_pos + n_sent].mean().item()
+            token_pos += n_sent
+
+            if sent_ce <= threshold:
+                continue
+            if len(sentence.split()) < _MIN_SENT_WORDS:
+                continue
+
+            # Attribute to most relevant law passage using the full sentence as query
+            sent_vec = self.vectorizer.transform([sentence])
+            sent_scores = (self.tfidf_matrix @ sent_vec.T).toarray().flatten()
+            best = self.passages[sent_scores.argmax()]
+
             violations.append(Violation(
-                statement_excerpt=excerpt,
+                statement_excerpt=sentence.strip(),
                 law_excerpt=best[:300].strip(),
                 explanation=(
-                    f"The statement's claim that '{excerpt}' "
+                    f"The statement's claim that '{sentence.strip()[:100]}' "
                     f"may conflict with the legal provision: '{best[:150].strip()}'."
                 ),
             ))
+
         return violations
 
 
-def _merge_spans(indices: list[int]) -> list[tuple[int, int]]:
-    if not indices:
-        return []
-    spans, start, end = [], indices[0], indices[0]
-    for i in indices[1:]:
-        if i == end + 1:
-            end = i
-        else:
-            spans.append((start, end))
-            start = end = i
-    spans.append((start, end))
-    return spans
+def _split_sentences(text: str) -> list[str]:
+    parts = re.split(r"(?<=[.!?])\s+", text.strip())
+    return [p.strip() for p in parts if p.strip()]
