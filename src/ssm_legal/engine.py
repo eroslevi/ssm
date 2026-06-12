@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 from typing import Callable, Iterator, Optional
 
 import torch
@@ -11,7 +12,7 @@ class SSMEngine:
         self,
         model_name: str = "state-spaces/mamba-370m-hf",
         device: str = "cpu",
-        dtype: torch.dtype = torch.float16,
+        dtype: torch.dtype = torch.float32,  # float32 on CPU — float16 is slow without native hw support
     ):
         self.model = MambaForCausalLM.from_pretrained(
             model_name, torch_dtype=dtype
@@ -27,16 +28,21 @@ class SSMEngine:
         on_progress: Optional[Callable[[int], None]] = None,
     ) -> None:
         """Stream law tokens through the SSM and save the final hidden state."""
-        cache: Optional[MambaCache] = None
+        cache = None
         tokens_processed = 0
+        t0 = time.time()
         with torch.no_grad():
             for chunk in token_stream:
                 input_ids = chunk.unsqueeze(0).to(self.device)
                 out = self.model(input_ids, cache_params=cache, use_cache=True)
                 cache = out.cache_params
                 tokens_processed += chunk.shape[0]
+                elapsed = time.time() - t0
+                tps = tokens_processed / elapsed if elapsed > 0 else 0
+                print(f"\r  ingest: {tokens_processed} tokens  {tps:.1f} tok/s", end="", flush=True)
                 if on_progress:
                     on_progress(tokens_processed)
+        print()  # newline after progress line
         _save_cache(cache, checkpoint_path)
 
     def check(
@@ -52,7 +58,7 @@ class SSMEngine:
         return torch.log_softmax(out.logits.squeeze(0), dim=-1)  # (n_tokens, vocab_size)
 
 
-def _save_cache(cache: MambaCache, path: str) -> None:
+def _save_cache(cache, path: str) -> None:
     torch.save(
         {
             "seqlen_offset": cache.seqlen_offset,
