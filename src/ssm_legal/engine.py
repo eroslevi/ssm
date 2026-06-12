@@ -4,7 +4,6 @@ from typing import Callable, Iterator, Optional
 
 import torch
 from transformers import MambaForCausalLM
-from transformers.models.mamba.modeling_mamba import MambaCache
 
 
 class SSMEngine:
@@ -46,7 +45,7 @@ class SSMEngine:
         checkpoint_path: str,
     ) -> torch.Tensor:
         """Restore law context, process statement, return per-token log-probs."""
-        cache = _load_cache(checkpoint_path, self.model.config, self.device, self.dtype)
+        cache = _load_cache(checkpoint_path, self.model, self.device, self.dtype)
         input_ids = tokens.unsqueeze(0).to(self.device)
         with torch.no_grad():
             out = self.model(input_ids, cache_params=cache, use_cache=False)
@@ -64,9 +63,13 @@ def _save_cache(cache: MambaCache, path: str) -> None:
     )
 
 
-def _load_cache(path: str, config, device: str, dtype: torch.dtype) -> MambaCache:
+def _load_cache(path: str, model: MambaForCausalLM, device: str, dtype: torch.dtype):
     saved = torch.load(path, map_location="cpu", weights_only=False)
-    cache = MambaCache(config, batch_size=1, dtype=dtype, device=device)
+    # Bootstrap a cache object via the model itself — avoids importing MambaCache directly,
+    # which moves between transformers versions.
+    dummy = torch.zeros(1, 1, dtype=torch.long, device=device)
+    with torch.no_grad():
+        cache = model(dummy, use_cache=True).cache_params
     cache.seqlen_offset = saved["seqlen_offset"]
     for k, v in saved["conv_states"].items():
         cache.conv_states[k] = v.to(device=device, dtype=dtype)
