@@ -1,0 +1,96 @@
+COMMERCIAL BOOKKEEPING ACT — CONSOLIDATED TEXT
+
+Part I — General Provisions
+
+Article 1. Scope of Application
+This Act applies to all natural and legal persons engaged in commercial bookkeeping
+activities within the jurisdiction, including sole traders, partnerships, limited
+liability companies, and public companies. Compliance with this Act is mandatory and
+non-derogable except where explicitly provided herein.
+
+Article 2. Definitions
+For the purposes of this Act, the following definitions apply:
+(a) "Client funds" means any monetary assets received by a bookkeeping firm on behalf
+of or for the account of a client, regardless of the form in which such assets are
+received or held.
+(b) "Fee" means any remuneration, commission, charge, or other consideration payable
+to a bookkeeping firm in exchange for services rendered.
+(c) "Disclosure" means the written communication of material information to a client
+in plain language prior to the relevant transaction or service engagement.
+(d) "Retention" means the act of holding client funds beyond the period required for
+the completion of the instructed transaction.
+
+Article 3. Prohibition on Undisclosed Fees
+3.1 No bookkeeping firm shall charge, deduct, or retain any fee from client funds
+unless such fee has been explicitly disclosed to the client in writing prior to the
+commencement of the relevant service.
+3.2 Written disclosure under Article 3.1 must include: (a) the exact amount or
+percentage of the fee; (b) the basis for calculation; (c) the timing of deduction;
+and (d) the account from which the fee will be deducted.
+3.3 Verbal disclosure does not satisfy the requirement of Article 3.1.
+3.4 Any fee charged in violation of Article 3.1 must be refunded to the client within
+five business days of the client's written demand.
+
+Article 4. Client Fund Segregation
+4.1 Client funds must be held in accounts separate from the operating accounts of the
+bookkeeping firm at all times.
+4.2 No bookkeeping firm shall commingle client funds with its own funds or with the
+funds of any other client without the express written consent of all affected clients.
+4.3 Client fund accounts must be clearly labelled as such and must be identifiable
+in the firm's books as client fund accounts.
+
+Article 5. Record-Keeping Requirements
+5.1 Every bookkeeping firm shall maintain accurate and complete records of all
+transactions involving client funds for a minimum period of seven years from the
+date of the transaction.
+5.2 Records must include: (a) the identity of the client; (b) the amount received;
+(c) the date of receipt; (d) the purpose of the funds; (e) any fees deducted with
+reference to the applicable disclosure document; and (f) the date of return or
+disbursement of funds.
+5.3 Records must be made available to the relevant supervisory authority within
+three business days of a written request.
+
+Article 6. Reporting Obligations
+6.1 Bookkeeping firms handling client funds in excess of EUR 10,000 per transaction
+must file a transaction report with the Financial Supervision Authority within two
+business days of the transaction.
+6.2 Suspicious transactions must be reported regardless of amount within 24 hours
+of the firm becoming aware of the suspicious circumstances.
+6.3 A transaction is suspicious if there are reasonable grounds to believe that the
+funds are connected to money laundering, tax evasion, or other financial crime.
+
+Part II — Client Rights
+
+Article 7. Right to Information
+7.1 Clients are entitled to receive, upon request, a complete itemised statement of
+all fees charged and all transactions conducted on their behalf within the preceding
+twelve months.
+7.2 Such statements must be provided free of charge within five business days of
+the client's written request.
+7.3 Bookkeeping firms may not impose conditions on the exercise of rights under
+this Article.
+
+Article 8. Right to Refund
+8.1 Where a bookkeeping firm has charged fees in excess of those disclosed, the
+client is entitled to a full refund of the excess amount plus interest at the
+statutory rate from the date of the overcharge.
+8.2 The client's right to refund under this Article is not subject to any limitation
+period shorter than three years from the date on which the client became aware or
+should reasonably have become aware of the overcharge.
+
+Part III — Enforcement
+
+Article 9. Supervisory Authority
+9.1 The Financial Supervision Authority is responsible for the supervision and
+enforcement of this Act.
+9.2 The Authority may conduct inspections, request documents, and impose
+administrative sanctions in accordance with the procedures set out in this Part.
+
+Article 10. Administrative Sanctions
+10.1 Violations of Articles 3, 4, or 5 are subject to an administrative fine of
+not less than EUR 5,000 and not more than EUR 500,000 per violation.
+10.2 Repeated violations within a three-year period are subject to a fine of up to
+EUR 2,000,000 and may result in revocation of the firm's operating licence.
+10.3 The Authority shall publish all final administrative decisions imposing fines
+in excess of EUR 50,000 on its official website within thirty days of the decision
+becoming final.

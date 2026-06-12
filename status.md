@@ -1,7 +1,7 @@
 # Project Status
 
 **Last updated:** 2026-06-09
-**Current stage:** 2e — Component Spec: Web Frontend
+**Current stage:** 3a — Document Loader implementation
 **Branch:** claude/ssm-long-document-qa-jgbylw
 
 ---
@@ -25,7 +25,8 @@
 - [x] Stage 2b: `specs/03_components/02_ssm_engine.md` — APPROVED
 - [x] Stage 2c: `specs/03_components/03_compliance_extractor.md` — APPROVED
 - [x] Stage 2d: `specs/03_components/04_output_reporter.md` — APPROVED
-- [ ] Stage 2e: `specs/03_components/05_web_frontend.md` — awaiting human approval
+- [x] Stage 2e: `specs/03_components/05_web_frontend.md` — APPROVED
+- [ ] Stage 3a: Document Loader — implemented, awaiting eval results from target hardware
 
 ---
 
@@ -37,5 +38,5 @@ None.
 
 ## Next Action
 
-Await human approval of `specs/03_components/05_web_frontend.md`, then
-begin Stage 3a (Document Loader implementation).
+User runs `python tests/eval_loader.py` on target hardware (Windows/HP EliteBook)
+after installing deps (`pip install -r requirements.txt`), shares results here.
