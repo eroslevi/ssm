@@ -1,7 +1,7 @@
 # Project Status
 
 **Last updated:** 2026-06-09
-**Current stage:** 3a — Document Loader implementation
+**Current stage:** 3b — SSM Engine implementation
 **Branch:** claude/ssm-long-document-qa-jgbylw
 
 ---
@@ -26,7 +26,8 @@
 - [x] Stage 2c: `specs/03_components/03_compliance_extractor.md` — APPROVED
 - [x] Stage 2d: `specs/03_components/04_output_reporter.md` — APPROVED
 - [x] Stage 2e: `specs/03_components/05_web_frontend.md` — APPROVED
-- [ ] Stage 3a: Document Loader — implemented, awaiting eval results from target hardware
+- [x] Stage 3a: Document Loader — APPROVED (all 5 AC passed on target hardware)
+- [ ] Stage 3b: SSM Engine — implemented, awaiting eval results from target hardware
 
 ---
 
@@ -38,5 +39,5 @@ None.
 
 ## Next Action
 
-User runs `python tests/eval_loader.py` on target hardware (Windows/HP EliteBook)
-after installing deps (`pip install -r requirements.txt`), shares results here.
+User runs `python tests/eval_engine.py` on target hardware. First run downloads
+~750 MB model weights. Share full output including throughput numbers.
