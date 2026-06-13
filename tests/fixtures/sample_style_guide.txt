@@ -1,0 +1,123 @@
+CORPORATE WRITING STYLE GUIDE
+Version 2.1 — Approved for all client-facing documents
+
+==============================================================
+1. USE ACTIVE VOICE
+==============================================================
+
+Write in active voice. The subject performs the action.
+Active voice is direct, clear, and easier to read.
+
+Correct: The manager approved the budget.
+Correct: The team submitted the quarterly report.
+Correct: The auditor reviewed all expense claims.
+
+Incorrect: The budget was approved by the manager.
+Incorrect: The quarterly report was submitted by the team.
+Incorrect: All expense claims were reviewed by the auditor.
+
+Passive voice buries the actor and weakens the sentence.
+Identify the actor and place it at the start of the sentence.
+Remove "was", "were", "is", "are" followed by a past participle.
+Remove "by" phrases that indicate hidden actors.
+
+==============================================================
+2. CHOOSE PLAIN WORDS
+==============================================================
+
+Use simple, direct words. Replace complex words with plain ones.
+
+Write "use" — not "utilize" or "utilise".
+Write "help" — not "facilitate".
+Write "show" — not "demonstrate".
+Write "start" — not "commence" or "initiate".
+Write "end" — not "terminate".
+Write "get" — not "obtain" or "procure".
+Write "need" — not "require" or "necessitate".
+Write "buy" — not "purchase" or "acquire".
+Write "use" — not "leverage" (except in financial contexts).
+Write "check" — not "ascertain".
+Write "ask" — not "enquire" or "request information".
+
+Plain words reduce cognitive load. They make content accessible to all readers.
+
+==============================================================
+3. KEEP SENTENCES SHORT
+==============================================================
+
+Each sentence must contain at most twenty words.
+Long sentences lose readers. Break them into two sentences.
+Remove filler phrases that add length without meaning.
+
+Remove: "in order to" — write "to"
+Remove: "due to the fact that" — write "because"
+Remove: "at this point in time" — write "now"
+Remove: "it is necessary for" — write "must"
+Remove: "for the purpose of" — write "to"
+Remove: "in the event that" — write "if"
+Remove: "with the exception of" — write "except"
+
+Short sentences are not simple sentences. They are precise sentences.
+
+==============================================================
+4. AVOID WEAK QUALIFIERS
+==============================================================
+
+Do not use: very, quite, rather, somewhat, fairly, relatively.
+These words weaken the statement they modify. Remove them.
+
+Write "important" — not "very important".
+Write "significant" — not "quite significant".
+Write "clear" — not "fairly clear".
+Write "complex" — not "rather complex".
+Write "urgent" — not "quite urgent".
+Write "large" — not "somewhat large".
+
+If a qualifier is needed, use a precise word instead.
+Write "critical" — not "very important".
+Write "substantial" — not "quite significant".
+
+==============================================================
+5. USE PRESENT TENSE FOR INSTRUCTIONS
+==============================================================
+
+Write instructions in present tense.
+Instructions describe actions the reader takes now.
+
+Correct: Click the button to save.
+Correct: Enter the client code in the first field.
+Correct: Submit the form after reviewing all entries.
+
+Incorrect: You should click the button to save.
+Incorrect: The user is required to enter the client code.
+Incorrect: The form should be submitted after reviewing.
+
+==============================================================
+6. AVOID NOMINALIZATION
+==============================================================
+
+Use verbs, not nouns derived from verbs.
+Nominalizations hide the action and add unnecessary words.
+
+Write "decide" — not "make a decision".
+Write "investigate" — not "conduct an investigation".
+Write "recommend" — not "make a recommendation".
+Write "report" — not "submit a report".
+Write "analyse" — not "perform an analysis".
+Write "approve" — not "give approval".
+Write "discuss" — not "hold a discussion".
+Write "agree" — not "reach an agreement".
+
+Find the hidden verb inside the noun. Use the verb directly.
+
+==============================================================
+7. PUNCTUATION AND CONSISTENCY
+==============================================================
+
+Use the Oxford comma in lists of three or more items.
+Correct: reports, invoices, and receipts.
+Incorrect: reports, invoices and receipts.
+
+Capitalise product names and proper nouns consistently.
+Use the same term for the same concept throughout the document.
+Do not alternate between synonyms for technical terms.

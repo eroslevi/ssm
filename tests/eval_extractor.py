@@ -1,5 +1,5 @@
 """
-Stage 3c evaluation — ComplianceExtractor acceptance criteria.
+Stage 3c evaluation — ComplianceExtractor acceptance criteria (style guide use case).
 
 Run from the repo root:
     python tests/eval_extractor.py
@@ -19,9 +19,9 @@ from ssm_legal.engine import SSMEngine
 from ssm_legal.extractor import ComplianceExtractor
 
 FIXTURES     = Path(__file__).parent / "fixtures"
-LAW_FILE     = str(FIXTURES / "sample_laws.txt")
-STMT_NON     = (FIXTURES / "sample_statement.txt").read_text(encoding="utf-8")
-STMT_OK      = (FIXTURES / "compliant_statement.txt").read_text(encoding="utf-8")
+LAW_FILE     = str(FIXTURES / "sample_style_guide.txt")
+STMT_NON     = (FIXTURES / "sample_document.txt").read_text(encoding="utf-8")
+STMT_OK      = (FIXTURES / "compliant_document.txt").read_text(encoding="utf-8")
 
 
 def _result(label: str, passed: bool, detail: str = "") -> None:
@@ -51,18 +51,18 @@ def main() -> None:
     size_kb = Path(index_path).stat().st_size / 1024
     _result("AC1 index created", size_kb > 0, f"{size_kb:.1f} KB")
 
-    # AC2: compliant statement → no violations
+    # AC2: compliant document → no violations
     t0 = time.time()
     v_ok = extractor.extract(STMT_OK)
     elapsed_ok = time.time() - t0
-    _result("AC2 compliant → no violations", len(v_ok) == 0,
+    _result("AC2 compliant doc → no violations", len(v_ok) == 0,
             f"{len(v_ok)} violations in {elapsed_ok:.1f}s")
 
-    # AC3: non-compliant statement → at least 1 violation
+    # AC3: non-compliant document → at least 1 violation
     t0 = time.time()
     v_non = extractor.extract(STMT_NON)
     elapsed_non = time.time() - t0
-    _result("AC3 non-compliant → violations detected", len(v_non) >= 1,
+    _result("AC3 non-compliant doc → violations detected", len(v_non) >= 1,
             f"{len(v_non)} violations in {elapsed_non:.1f}s")
 
     # AC4: excerpts are readable text (not token IDs or empty)
@@ -100,10 +100,10 @@ def main() -> None:
 
     # Print violation details
     if v_non:
-        print(f"\nViolations found in non-compliant statement ({len(v_non)}):")
+        print(f"\nStyle violations in non-compliant document ({len(v_non)}):")
         for i, v in enumerate(v_non, 1):
-            print(f"  [{i}] Statement: \"{v.statement_excerpt[:80]}\"")
-            print(f"       Law:       \"{v.law_excerpt[:80]}\"")
+            print(f"  [{i}] Document:   \"{v.statement_excerpt[:80]}\"")
+            print(f"       Style rule: \"{v.law_excerpt[:80]}\"")
             print(f"       {v.explanation[:120]}")
 
     Path(index_path).unlink(missing_ok=True)
