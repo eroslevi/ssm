@@ -11,7 +11,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 _NLI_MODEL   = "MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7"
 _MIN_WORDS   = 3
-_MAX_PREMISE = 800  # chars fed to NLI as premise (covers header + first paragraph)
+_MAX_PREMISE = 1500  # chars fed to NLI as premise
 
 
 # ---------------------------------------------------------------------------
