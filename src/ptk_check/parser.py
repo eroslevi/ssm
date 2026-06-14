@@ -9,8 +9,10 @@ BOOK_ORDINALS = {
     "ÖTÖDIK": 5, "HATODIK": 6, "HETEDIK": 7, "NYOLCADIK": 8,
 }
 
-_ARTICLE_RE  = re.compile(r'^(\d+):(\d+)\.\s*§\s*\[(.+)\]')
-_CROSSREF_RE = re.compile(r'(\d+):(\d+)\.\s*§')
+# Matches: BOOK:NUM. § [Title]  and  BOOK:NUM/A. § *  [Title]  and  BOOK:NUM. § *
+_ARTICLE_RE  = re.compile(r'^(\d+):(\d+(?:/[A-Z])?)\.[\s]*§(?:[\s]*\*+)?[\s]*(?:\[(.+)\])?')
+_CROSSREF_RE = re.compile(r'(\d+):(\d+(?:/[A-Z])?)\.\s*§')
+_NUM_RE      = re.compile(r'\d+')
 _PARA_RE     = re.compile(r'^\((\d+)\)\s+(.+)')
 _POINT_RE    = re.compile(r'^([a-záéíóöőúüű])\)\s+(.+)', re.IGNORECASE)
 _BOOK_RE     = re.compile(r'^(ELSŐ|MÁSODIK|HARMADIK|NEGYEDIK|ÖTÖDIK|HATODIK|HETEDIK|NYOLCADIK) KÖNYV$')
@@ -78,14 +80,15 @@ def parse_ptk(file_path: str, law_id: str = "2013-5") -> list[ParsedArticle]:
             if current is not None:
                 _finalise(current, current_lines)
                 articles.append(current)
-            book_num    = int(m.group(1))
-            article_num = int(m.group(2))
+            book_num        = int(m.group(1))
+            article_num_str = m.group(2)            # e.g. "130" or "167/A"
+            article_num     = int(_NUM_RE.match(article_num_str).group())
             current = ParsedArticle(
                 law_id=law_id,
-                article_ref=f"{book_num}:{article_num}",
+                article_ref=f"{book_num}:{article_num_str}",
                 book_num=book_num,
                 article_num=article_num,
-                title=m.group(3),
+                title=m.group(3) or "",
                 full_text="",
                 book_name=ctx_book_name,
                 part_name=ctx_part_name,
@@ -130,4 +133,4 @@ def _finalise(article: ParsedArticle, lines: list[str]) -> None:
         ref = f"{m.group(1)}:{m.group(2)}"
         if ref != article.article_ref:
             refs.add(ref)
-    article.cross_refs = list(refs)
+    article.cross_refs = sorted(refs)

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sqlite3
 from datetime import datetime
+from itertools import groupby
 from pathlib import Path
 
 import faiss
@@ -140,9 +141,46 @@ def _build_sqlite(
                 (article_id, ref_to_id.get(ref), ref),
             )
 
+    _add_structural_xrefs(articles, conn, ref_to_id)
+
     conn.commit()
     conn.close()
     print(f"    SQLite: {db_path} ({db_path.stat().st_size // 1024} KB)")
+
+
+def _add_structural_xrefs(
+    articles: list[ParsedArticle],
+    conn: sqlite3.Connection,
+    ref_to_id: dict,
+) -> None:
+    """Add same-chapter adjacency cross-refs so the knowledge graph is traversable."""
+    def _group_key(a: ParsedArticle) -> tuple:
+        chapter = a.chapter_name or a.title_name or a.part_name or a.book_name or ""
+        return (a.law_id, a.book_num, chapter)
+
+    sorted_arts = sorted(articles, key=lambda a: (_group_key(a), a.article_num))
+
+    total = 0
+    for _key, group_iter in groupby(sorted_arts, key=_group_key):
+        group = list(group_iter)
+        for i, src in enumerate(group):
+            src_id = ref_to_id.get(src.article_ref)
+            if not src_id:
+                continue
+            for j in range(max(0, i - 5), min(len(group), i + 6)):
+                if i == j:
+                    continue
+                tgt = group[j]
+                tgt_id = ref_to_id.get(tgt.article_ref)
+                conn.execute(
+                    "INSERT INTO cross_refs "
+                    "(source_article_id, target_article_id, target_ref, context) "
+                    "VALUES (?,?,?,?)",
+                    (src_id, tgt_id, tgt.article_ref, "structural"),
+                )
+                total += 1
+
+    print(f"    structural cross-refs: {total}")
 
 
 # ---------------------------------------------------------------------------
