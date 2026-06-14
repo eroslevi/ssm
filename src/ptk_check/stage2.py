@@ -236,7 +236,7 @@ def run_stage2(statement: str, config, data_dir: str = "data") -> Stage2Result:
         client = AzureOpenAI(
             azure_endpoint=config.azure_endpoint,
             api_key=config.azure_api_key,
-            api_version="2024-02-01",
+            api_version=config.azure_api_version,
         )
         resp = client.chat.completions.create(
             model=config.azure_model,

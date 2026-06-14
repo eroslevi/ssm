@@ -4,9 +4,15 @@ top_k_stage2: 10
 graph_hops: 2
 graph_max_articles: 50
 
-azure_endpoint: "https://YOUR-ENDPOINT.openai.azure.com/"
-azure_api_key: "YOUR-API-KEY"
+# Azure credentials are read from environment variables (take precedence over values here):
+#   AZURE_OPENAI_ENDPOINT   → azure_endpoint
+#   AZURE_OPENAI_API_KEY    → azure_api_key
+#   AZURE_OPENAI_DEPLOYMENT → azure_model
+#   AZURE_OPENAI_API_VERSION → azure_api_version
+azure_endpoint: ""
+azure_api_key: ""
 azure_model: "gpt-4o"
+azure_api_version: "2024-02-01"
 
 stage2_system_prompt: |
   You are a Hungarian legal compliance expert specialising in the Polgári Törvénykönyv
