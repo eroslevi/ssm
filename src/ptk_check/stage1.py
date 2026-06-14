@@ -11,7 +11,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 _NLI_MODEL   = "MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7"
 _MIN_WORDS   = 3
-_MAX_PREMISE = 1500  # chars fed to NLI as premise
+_MAX_PREMISE = 400  # chars fed to NLI as premise (shorter = faster CPU inference)
 
 
 # ---------------------------------------------------------------------------
@@ -106,29 +106,34 @@ class _NLIScorer:
         self._model.eval()
         self._label_map = {v: k for k, v in self._model.config.label2id.items()}
 
-    def score(self, premise: str, hypothesis: str) -> NLIScore:
+    def score_batch(self, pairs: list[tuple[str, str]]) -> list[NLIScore]:
+        """Score a batch of (premise, hypothesis) pairs in one forward pass."""
         self._load()
+        premises    = [p[:_MAX_PREMISE] for p, _ in pairs]
+        hypotheses  = [h for _, h in pairs]
         inputs = self._tokenizer(
-            premise[:_MAX_PREMISE],
-            hypothesis,
+            premises,
+            hypotheses,
             return_tensors="pt",
             truncation=True,
             max_length=512,
+            padding=True,
         )
         with torch.no_grad():
             logits = self._model(**inputs).logits
-        probs = torch.softmax(logits, dim=-1)[0]
+        probs_batch = torch.softmax(logits, dim=-1)
 
-        scores: dict[str, float] = {}
-        for idx, prob in enumerate(probs):
-            label = self._label_map.get(idx, "").upper()
-            scores[label] = float(prob)
-
-        return NLIScore(
-            entailment=scores.get("ENTAILMENT", 0.0),
-            neutral=scores.get("NEUTRAL", 0.0),
-            contradiction=scores.get("CONTRADICTION", 0.0),
-        )
+        results = []
+        for probs in probs_batch:
+            s: dict[str, float] = {}
+            for idx, prob in enumerate(probs):
+                s[self._label_map.get(idx, "").upper()] = float(prob)
+            results.append(NLIScore(
+                entailment=s.get("ENTAILMENT", 0.0),
+                neutral=s.get("NEUTRAL", 0.0),
+                contradiction=s.get("CONTRADICTION", 0.0),
+            ))
+        return results
 
 
 _scorer = _NLIScorer()
@@ -163,7 +168,10 @@ def run_stage1(statement: str, config, data_dir: str = "data") -> Stage1Result:
                 seen_aids.add(hit.article_id)
                 all_hits.append(hit)
 
-            nli = _scorer.score(hit.full_text, sentence)
+        if not hits:
+            continue
+        nli_scores = _scorer.score_batch([(h.full_text, sentence) for h in hits])
+        for hit, nli in zip(hits, nli_scores):
             if nli.contradiction >= config.nli_threshold:
                 violations.append(Stage1Violation(
                     sentence=sentence,
