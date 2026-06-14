@@ -1,0 +1,39 @@
+nli_threshold: 0.85
+top_k_stage1: 5
+top_k_stage2: 10
+graph_hops: 2
+graph_max_articles: 50
+
+azure_endpoint: "https://YOUR-ENDPOINT.openai.azure.com/"
+azure_api_key: "YOUR-API-KEY"
+azure_model: "gpt-4o"
+
+stage2_system_prompt: |
+  You are a Hungarian legal compliance expert specialising in the Polgári Törvénykönyv
+  (2013. évi V. törvény). Analyse whether a company statement violates any of the
+  provided legal provisions. Respond only with a valid JSON object, no markdown.
+
+stage2_user_prompt: |
+  Legal provisions from the Polgári Törvénykönyv:
+
+  {law_context}
+
+  Company statement to check:
+  {statement}
+
+  Does this statement violate any of the above legal provisions?
+  Return a JSON object with this exact structure:
+  {{
+    "verdict": "VIOLATION" or "COMPLIANT",
+    "violations": [
+      {{
+        "sentence": "exact sentence from the statement that violates the law",
+        "article_ref": "e.g. 6:130",
+        "paragraph_ref": "e.g. 6:130. § (2) bekezdés",
+        "explanation": "one sentence explaining the specific conflict"
+      }}
+    ],
+    "checked_articles": ["6:130", "6:215"]
+  }}
+  If compliant, return empty violations array and verdict COMPLIANT.
+  Always list every article you consulted in checked_articles.
