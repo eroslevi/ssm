@@ -7,7 +7,9 @@ CLI entry point.
 from __future__ import annotations
 
 import argparse
+import socket
 import sys
+import threading
 import time
 import webbrowser
 from pathlib import Path
@@ -37,7 +39,20 @@ def _cmd_serve(args: argparse.Namespace) -> None:
     import uvicorn
     url = f"http://{args.host}:{args.port}"
     print(f"Starting server → {url}")
-    webbrowser.open(url)
+
+    def _open_browser() -> None:
+        # poll until the port accepts connections, then open the browser
+        deadline = time.time() + 30
+        while time.time() < deadline:
+            try:
+                with socket.create_connection((args.host, args.port), timeout=0.5):
+                    break
+            except OSError:
+                time.sleep(0.2)
+        webbrowser.open(url)
+
+    threading.Thread(target=_open_browser, daemon=True).start()
+
     uvicorn.run(
         "ptk_check.web.server:app",
         host=args.host,
