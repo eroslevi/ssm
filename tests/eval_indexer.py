@@ -2,7 +2,7 @@
 Stage 3b evaluation — IndexBuilder acceptance criteria.
 
 Run from repo root:
-    python tests/eval_indexer.py
+    python tests/eval_indexer.py path/to/ptk.txt
 
 Builds index from the full PTK into data/ directory.
 """
@@ -16,7 +16,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 from ptk_check.parser  import parse_ptk
 from ptk_check.indexer import build_index
 
-PTK_FILE = "/root/.claude/uploads/4dc6d9a0-3817-5762-86a7-fb7407f6e457/a4f4df3c-ptk.txt"
 DATA_DIR = "data"
 
 
@@ -25,6 +24,10 @@ def _r(label, passed, detail=""):
 
 
 def main():
+    if len(sys.argv) < 2:
+        print("Usage: python tests/eval_indexer.py path/to/ptk.txt", file=sys.stderr)
+        sys.exit(1)
+    PTK_FILE = sys.argv[1]
     print("Parsing PTK...")
     articles = parse_ptk(PTK_FILE)
     print(f"  {len(articles)} articles parsed")
