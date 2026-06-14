@@ -232,6 +232,14 @@ def run_stage2(statement: str, config, data_dir: str = "data") -> Stage2Result:
     user_tmpl   = config.stage2_user_prompt   or _DEFAULT_USER
     user_prompt = user_tmpl.format(law_context=law_context, statement=statement)
 
+    print("\n" + "="*60)
+    print("SYSTEM PROMPT:")
+    print(sys_prompt.strip())
+    print("-"*60)
+    print("USER PROMPT:")
+    print(user_prompt.strip())
+    print("="*60 + "\n")
+
     try:
         client = AzureOpenAI(
             azure_endpoint=config.azure_endpoint,
