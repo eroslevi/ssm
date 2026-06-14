@@ -1,7 +1,7 @@
 # Project Status
 
 **Last updated:** 2026-06-14
-**Current stage:** 3a — LawParser evaluation
+**Current stage:** 3b — IndexBuilder evaluation
 **Branch:** claude/ssm-long-document-qa-jgbylw
 
 ---
@@ -20,6 +20,7 @@ Two-stage Hungarian legal compliance checker:
 
 - [x] All specs approved (2026-06-14)
 - [x] Full implementation committed
+- [x] Stage 3a: LawParser — PASSED (1586 articles, all 8 books, AC1–AC6 green, 2026-06-14)
 
 ---
 
@@ -47,15 +48,13 @@ Two-stage Hungarian legal compliance checker:
 
 ## In Progress
 
-- [ ] Stage 3a: LawParser — awaiting eval results
+- [ ] Stage 3b: IndexBuilder — awaiting eval results
 
 ---
 
 ## Next Actions (in order)
 
-1. `pip install -r requirements.txt`
-2. `python tests/eval_parser.py` → share output for Stage 3a review
-3. `python tests/eval_indexer.py` → share output for Stage 3b review
-4. `python tests/eval_stage1.py` → share output for Stage 3c review
-5. Configure `config.yaml` with Azure credentials → test Stage 2
-6. `python -m ptk_check serve` → test web UI
+1. `python tests/eval_indexer.py C:\path\to\ptk.txt` → share output for Stage 3b review (takes several minutes — downloads multilingual-e5-base ~500 MB on first run)
+2. `python tests/eval_stage1.py` → share output for Stage 3c review (downloads mDeBERTa ~600 MB on first run)
+3. Configure `config.yaml` with Azure credentials → test Stage 2
+4. `python -m ptk_check serve` → test web UI
