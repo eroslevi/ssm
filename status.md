@@ -1,7 +1,7 @@
 # Project Status
 
 **Last updated:** 2026-06-14
-**Current stage:** 3c — Stage1Agent evaluation
+**Current stage:** 3d — end-to-end integration & web UI
 **Branch:** claude/ssm-long-document-qa-jgbylw
 
 ---
@@ -22,6 +22,7 @@ Two-stage Hungarian legal compliance checker:
 - [x] Full implementation committed
 - [x] Stage 3a: LawParser — PASSED (1586 articles, all 8 books, AC1–AC6 green, 2026-06-14)
 - [x] Stage 3b: IndexBuilder — PASSED (db=3820KB, faiss=1586 vectors, 9579 cross-refs, 456s, AC1–AC8 green, 2026-06-14)
+- [x] Stage 3c: Stage1Agent — PASSED (0 compliant violations, 6 non-compliant violations incl. 6:124@0.992 + 6:62@0.914, AC1–AC6 green, 2026-06-14)
 
 ---
 
@@ -49,12 +50,12 @@ Two-stage Hungarian legal compliance checker:
 
 ## In Progress
 
-- [ ] Stage 3c: Stage1Agent — awaiting eval results
+- [ ] Stage 3d: end-to-end integration — Azure credentials + web UI
 
 ---
 
 ## Next Actions (in order)
 
-1. `python tests/eval_stage1.py` → share output for Stage 3c review (downloads mDeBERTa ~600 MB on first run)
-2. Configure `config.yaml` with Azure credentials → test Stage 2
-3. `python -m ptk_check serve` → test web UI
+1. Fill in `config.yaml` with your Azure AI Foundry endpoint, API key, and model name
+2. `python -m ptk_check serve` → opens browser at http://127.0.0.1:8000
+3. Paste a test statement → verify Stage 1 runs, escalate to Stage 2, check graph visualization
